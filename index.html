@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LC GA Dashboard</title>
+  <link rel="stylesheet" href="css/design-system.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ══ GNB ══ -->
+  <header class="gnb">
+    <div class="gnb-logo-area">
+      <img
+        class="gnb-logo-img"
+        src="assets/logo.png"
+        alt="LoadComplete"
+        onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+      />
+      <div id="logo-fallback" class="gnb-logo-fallback" style="display:none;">
+        <div class="gnb-logo-mark">LC</div>
+        <span class="gnb-logo-name">LoadComplete</span>
+      </div>
+    </div>
+
+    <div class="gnb-system-label">
+      <span>GA OPERATIONS</span>
+    </div>
+
+    <nav class="gnb-tabs">
+      <div class="gnb-tab active" data-gnb="operations">운영 리포트</div>
+      <div class="gnb-tab" data-gnb="cost">비용 관리</div>
+      <div class="gnb-tab" data-gnb="welfare">복지 현황</div>
+      <div class="gnb-tab" data-gnb="infra">인프라</div>
+    </nav>
+
+    <div class="gnb-right">
+      <div class="gnb-period" id="gnb-period">2025년 3월</div>
+      <div class="gnb-avatar" id="user-avatar" title="박성훈 · 관리자">박</div>
+    </div>
+  </header>
+
+  <!-- ══ 바디 ══ -->
+  <div class="app-body">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+
+      <!-- 이번 달 KPI 요약 -->
+      <div id="sidebar-kpi" style="padding: 14px 10px 0;"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">리포트</div>
+        <div class="sidebar-item active" data-page="cafe">
+          <div class="sidebar-dot"></div>카페 월 매출
+        </div>
+        <div class="sidebar-item" data-page="ai-cost">
+          <div class="sidebar-dot"></div>AI 비용 현황
+        </div>
+        <div class="sidebar-item" data-page="algocare">
+          <div class="sidebar-dot"></div>알고케어 이용자
+        </div>
+        <div class="sidebar-item" data-page="slack">
+          <div class="sidebar-dot"></div>슬랙 / 오피스키퍼
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">관리</div>
+        <div class="sidebar-item" data-page="input">
+          <div class="sidebar-dot"></div>데이터 입력
+        </div>
+        <div class="sidebar-item" data-page="permissions">
+          <div class="sidebar-dot"></div>권한 설정
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">최근 변경</div>
+        <div id="recent-changes" style="padding: 0 4px;">
+          <div style="padding: 5px 6px; margin-bottom: 2px;">
+            <div style="font-size: 10.5px; color: var(--text-2);">불러오는 중...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar" id="sidebar-avatar">박</div>
+          <div>
+            <div class="sidebar-user-name" id="sidebar-name">박성훈</div>
+            <div class="sidebar-user-role" id="sidebar-role">관리자</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 워크스페이스 — 페이지별로 교체됨 -->
+    <main class="workspace" id="workspace">
+      <div class="state-loading">
+        <div class="state-loading-spinner"></div>
+        <span>대시보드를 불러오는 중...</span>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<!-- 토스트 영역 -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- 전역 스크립트 -->
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/router.js"></script>
+<script src="pages/cafe.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

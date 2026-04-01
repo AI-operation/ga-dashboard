@@ -1,0 +1,18 @@
+/* LC GA Dashboard — 앱 추가 스타일 */
+
+/* 워크스페이스 헤더는 sticky로 고정 */
+.ws-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* 사이드바 스크롤바 */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* 워크스페이스 스크롤바 */
+.ws-content::-webkit-scrollbar { width: 5px; }
+.ws-content::-webkit-scrollbar-track { background: transparent; }
+.ws-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }

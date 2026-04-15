@@ -9,11 +9,11 @@ const CONFIG = {
   // ── Apps Script 웹 앱 URL ──────────────────────────────────
   // Apps Script 배포 후 발급되는 URL로 교체하세요.
   // 예: 'https://script.google.com/macros/s/AKfy.../exec'
-  API_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzmCQ8Xx7oXGO_he8o4ZcM2Eg02zBwxPhSXBcE2p5JgmOKAe0xS87hFep77Vm2PGo25/exec',
 
   // ── Google Sheets ID ───────────────────────────────────────
   // Sheets URL에서 /d/ 뒤의 긴 문자열
-  SHEET_ID_DATA:        'YOUR_DATA_SHEET_ID',
+  SHEET_ID_DATA: '1l8-gQVGTjbH_m9xvva_kKCFuiKfgB_WftaIUY7QHiD0'
   SHEET_ID_PERMISSIONS: 'YOUR_PERMISSIONS_SHEET_ID',
 
   // ── 시트 이름 (Sheets 탭 이름과 정확히 일치해야 함) ────────

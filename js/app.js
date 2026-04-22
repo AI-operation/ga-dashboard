@@ -44,6 +44,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   Router.register('input',       Pages.input);
   Router.register('permissions', Pages.permissions);
 
+  // ── 레이아웃 설정 로드 (서버에서 가져옴) ───────────────
+  if (typeof Layout !== 'undefined') {
+    await Layout.load();
+  }
+
+  // ── 관리자 편집 버튼 표시 ───────────────────────────────
+  if (user.ROLE === 'admin') {
+    const editBtn = document.getElementById('btn-layout-edit');
+    if (editBtn) {
+      editBtn.style.display = '';
+      editBtn.addEventListener('click', () => {
+        if (typeof Layout !== 'undefined') Layout.enterEditMode();
+      });
+    }
+  }
+
   // ── 최근 변경 이력 (Mock) ────────────────────────────────
   document.getElementById('recent-changes').innerHTML = `
     <div style="padding: 5px 6px; margin-bottom: 2px;">

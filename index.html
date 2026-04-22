@@ -6,6 +6,146 @@
   <title>LC GA Dashboard</title>
   <link rel="stylesheet" href="css/design-system.css" />
   <link rel="stylesheet" href="css/app.css" />
+  <style>
+    /* ─── 레이아웃 편집 모드 ─────────────────────────── */
+    #btn-layout-edit {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #btn-layout-edit:hover {
+      background: var(--yellow-pale);
+      border-color: var(--yellow);
+      color: var(--brown);
+    }
+
+    /* 편집 모드 상단 툴바 */
+    #layout-edit-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: var(--brown);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    #layout-edit-bar .edit-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    #layout-edit-bar .edit-bar-icon {
+      font-size: 14px;
+    }
+    #layout-edit-bar .edit-bar-title {
+      font-weight: 700;
+    }
+    #layout-edit-bar .edit-bar-desc {
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      margin-left: 6px;
+    }
+    #layout-edit-bar .edit-bar-right {
+      display: flex;
+      gap: 8px;
+    }
+    #layout-edit-bar button {
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      transition: all 0.15s;
+    }
+    #layout-edit-bar .btn-edit-cancel {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    #layout-edit-bar .btn-edit-cancel:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    #layout-edit-bar .btn-edit-save {
+      background: var(--yellow);
+      color: var(--brown);
+      font-weight: 700;
+    }
+    #layout-edit-bar .btn-edit-save:hover {
+      background: #F5C800;
+    }
+
+    /* 편집 모드일 때 body에 상단 패딩 */
+    body.layout-edit-mode {
+      padding-top: 48px;
+    }
+
+    /* 편집 모드일 때 그리드 시각적 힌트 */
+    body.layout-edit-mode [data-grid-id] {
+      outline: 1px dashed var(--yellow);
+      outline-offset: 2px;
+      border-radius: 10px;
+    }
+
+    /* 리사이즈 핸들 */
+    .resize-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+      margin-left: -4px;
+      cursor: col-resize;
+      z-index: 10;
+    }
+    .resize-handle::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      background: var(--yellow);
+      opacity: 0.4;
+      transition: opacity 0.15s, width 0.15s;
+    }
+    .resize-handle::after {
+      content: '⋮⋮';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--yellow);
+      color: var(--brown);
+      font-size: 13px;
+      font-weight: 700;
+      width: 20px;
+      height: 28px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .resize-handle:hover::before {
+      opacity: 1;
+      width: 3px;
+    }
+  </style>
 </head>
 <body>
 <div class="app-shell">
@@ -37,6 +177,7 @@
     </nav>
 
     <div class="gnb-right">
+      <button id="btn-layout-edit" style="display:none;" title="레이아웃 편집 (관리자)">✏️ 편집</button>
       <div class="gnb-period" id="gnb-period">2025년 3월</div>
       <div class="gnb-avatar" id="user-avatar" title="박성훈 · 관리자">박</div>
     </div>
@@ -117,8 +258,9 @@
 
 <!-- 전역 스크립트 -->
 <script src="js/config.js"></script>
-<script src="js/api.js"></script>
 <script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/layout.js"></script>
 <script src="js/router.js"></script>
 <script src="js/cafe.js"></script>
 <script src="js/app.js"></script>

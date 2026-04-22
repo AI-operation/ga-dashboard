@@ -92,210 +92,11 @@ function renderTabBar(el, activeTab, apiData, currentRow, fixed, costData) {
 // 메인 탭
 // ══════════════════════════════════════════════════════════
 function renderMain(el, apiData, row, fixed, costData) {
-  el.innerHTML = '';
-  el.appendChild(renderTabBar(el, 'main', apiData, row, fixed, costData));
-
-  const allRows = apiData.rows;
-  const totalSales = allRows.reduce((s,r) => s+r.매출합계, 0);
-  const totalBurden = allRows.reduce((s,r) => s+r.순매출, 0);
-
-  const wrap = document.createElement('div');
-
-  // 인사이트 배너
-  const lastRow = allRows[allRows.length-1];
-  const prevRow = allRows.length > 1 ? allRows[allRows.length-2] : null;
-  const prevDiff = prevRow && prevRow.매출합계 ? Math.round((lastRow.매출합계-prevRow.매출합계)/prevRow.매출합계*100) : 0;
-
-  wrap.innerHTML = `
-    <style>
-      .insight-banner{background:var(--yellow-pale);border:1px solid var(--yellow-border);border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;}
-      .insight-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0;margin-top:4px;}
-      .insight-main{font-size:12.5px;font-weight:500;color:var(--brown);}
-      .insight-sub{font-size:11px;color:var(--brown-mid);margin-top:3px;}
-      .annual-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px;}
-      .an-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
-      .an-label{font-size:10px;color:var(--text-3);margin-bottom:4px;}
-      .an-value{font-size:16px;font-weight:700;color:var(--text-1);line-height:1;}
-      .an-value.loss{color:#DC2626;}
-      .an-sub{font-size:10px;color:var(--text-3);margin-top:3px;}
-      .monthly-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-      .c-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
-      .c-head{padding:11px 16px 9px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
-      .c-title{font-size:12.5px;font-weight:700;color:var(--text-1);}
-      .c-meta{font-size:11px;color:var(--text-3);}
-      .stat3{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border-light);}
-      .stat-item{padding:10px 12px;text-align:center;border-right:1px solid var(--border-light);}
-      .stat-item:last-child{border-right:none;}
-      .stat-label{font-size:10px;color:var(--text-3);margin-bottom:3px;}
-      .stat-value{font-size:13px;font-weight:700;color:var(--text-1);}
-      .stat-value.up{color:#059669;}
-      .stat-value.dn{color:#DC2626;}
-      .monthly-table{width:100%;border-collapse:collapse;}
-      .monthly-table th{padding:8px 14px;font-size:10.5px;color:var(--text-3);background:var(--bg-page);border-bottom:1px solid var(--border-light);text-align:left;font-weight:400;}
-      .monthly-table th:not(:first-child){text-align:right;}
-      .monthly-table td{padding:9px 14px;font-size:12px;color:var(--text-2);border-bottom:1px solid var(--border-light);}
-      .monthly-table td:not(:first-child){text-align:right;}
-      .monthly-table tr:last-child td{border-bottom:none;}
-      .monthly-table tr:hover td{background:var(--bg-hover);}
-      .td-loss{color:#DC2626;font-weight:700;}
-    </style>
-
-    <!-- 인사이트 배너 -->
-    <div class="insight-banner">
-      <div class="insight-dot"></div>
-      <div>
-        <div class="insight-main">
-          ${lastRow.month}월 매출이 전월 대비 ${prevDiff >= 0 ? '+' : ''}${prevDiff}% ${prevDiff >= 0 ? '증가' : '감소'}했습니다.
-          올해 누적 회사 부담금은 ${Utils.formatKRW(Math.abs(totalBurden))}입니다.
-        </div>
-        <div class="insight-sub">사내카페는 복지 목적으로 운영되며, 회사 부담금은 복지 운영 비용으로 처리됩니다.</div>
-      </div>
-    </div>
-
-    <!-- 연간 누적 -->
-    <div class="annual-grid">
-      <div class="an-card">
-        <div class="an-label">누적 매출 (${allRows[0].month}~${lastRow.month}월)</div>
-        <div class="an-value">${Utils.formatKRW(totalSales)}</div>
-        <div class="an-sub">월평균 ${Utils.formatKRW(Math.round(totalSales/allRows.length))}</div>
-      </div>
-      <div class="an-card">
-        <div class="an-label">누적 지출</div>
-        <div class="an-value">${Utils.formatKRW(allRows.reduce((s,r)=>s+r.지출합계,0))}</div>
-        <div class="an-sub">월평균 ${Utils.formatKRW(Math.round(allRows.reduce((s,r)=>s+r.지출합계,0)/allRows.length))}</div>
-      </div>
-      <div class="an-card">
-        <div class="an-label">누적 회사 부담금</div>
-        <div class="an-value loss">${Utils.formatKRW(totalBurden)}</div>
-        <div class="an-sub">복지 운영 누적 비용</div>
-      </div>
-      <div class="an-card">
-        <div class="an-label">누적 직책지원비</div>
-        <div class="an-value">${Utils.formatKRW(allRows.reduce((s,r)=>s+r.직책지원비,0))}</div>
-        <div class="an-sub">${allRows.length}개월 합산</div>
-      </div>
-    </div>
-
-    <!-- 월별 그래프 + 통계 -->
-    <div class="monthly-grid">
-      <div class="c-card">
-        <div class="c-head">
-          <span class="c-title">월별 손익 추이</span>
-          <span class="c-meta">매출 vs 지출합계</span>
-        </div>
-        <div style="padding:14px 16px 8px;">
-          <canvas id="monthlyChart" height="140"></canvas>
-          <div style="display:flex;gap:14px;margin-top:8px;">
-            <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text-2);">
-              <div style="width:14px;height:2px;background:#F5C800;border-radius:1px;"></div>매출
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text-2);">
-              <div style="width:14px;height:2px;background:#FCA5A5;border-radius:1px;"></div>지출합계
-            </div>
-            <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text-2);">
-              <div style="width:14px;height:2px;background:#93C5FD;border-radius:1px;"></div>회사부담금
-            </div>
-          </div>
-        </div>
-        <div class="stat3">
-          <div class="stat-item">
-            <div class="stat-label">영업일수 (3월)</div>
-            <div class="stat-value">${lastRow.영업일수 || 19}일</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-label">일평균 매출</div>
-            <div class="stat-value">${Utils.formatMan(Math.round(lastRow.매출합계/(lastRow.영업일수||19)))}</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-label">전월 대비</div>
-            <div class="stat-value ${prevDiff >= 0 ? 'up' : 'dn'}">${prevDiff >= 0 ? '+' : ''}${prevDiff}%</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 직책지원비 추이 -->
-      <div class="c-card">
-        <div class="c-head">
-          <span class="c-title">직책지원비 추이</span>
-          <span class="c-meta">월별 변화</span>
-        </div>
-        <div style="padding:14px 16px 8px;">
-          <canvas id="jikchaekChart" height="140"></canvas>
-        </div>
-        <div class="stat3">
-          ${allRows.slice(-3).map(r => `
-            <div class="stat-item">
-              <div class="stat-label">${r.month}월</div>
-              <div class="stat-value">${Utils.formatMan(r.직책지원비)}</div>
-            </div>`).join('')}
-        </div>
-      </div>
-    </div>
-
-    <!-- 월별 상세 테이블 -->
-    <div class="c-card">
-      <div class="c-head">
-        <span class="c-title">월별 상세 내역</span>
-        <span class="c-meta">전체 ${allRows.length}개월</span>
-      </div>
-      <table class="monthly-table">
-        <thead>
-          <tr>
-            <th>연월</th>
-            <th>매출합계</th>
-            <th>재료비</th>
-            <th>직책지원비</th>
-            <th>변동지출</th>
-            <th>고정지출</th>
-            <th>특이지출</th>
-            <th>지출합계</th>
-            <th>회사부담금</th>
-            <th>메모</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${[...allRows].reverse().map(r => `
-            <tr>
-              <td style="font-weight:500;color:var(--text-1);">${r.year}년 ${r.month}월</td>
-              <td style="font-weight:700;color:var(--brown);">${Utils.formatKRW(r.매출합계)}</td>
-              <td>${Utils.formatKRW(r.재료비)}</td>
-              <td>${Utils.formatKRW(r.직책지원비)}</td>
-              <td>${Utils.formatKRW(r.변동지출)}</td>
-              <td>${Utils.formatKRW(r.고정지출)}</td>
-              <td>${Utils.formatKRW(r.특이지출)}</td>
-              <td style="font-weight:500;">${Utils.formatKRW(r.지출합계)}</td>
-              <td class="td-loss">${Utils.formatKRW(r.순매출)}</td>
-              <td style="color:var(--text-3);font-size:11px;">${r.메모 || '—'}</td>
-              <td><button class="btn btn-sm" onclick="openEditModal(${r.rowIndex},'${encodeURIComponent(JSON.stringify(r))}')">수정</button></td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-
-  el.appendChild(wrap);
-
-  // Chart.js 로드 후 그래프 그리기
-  if (typeof Chart === 'undefined') {
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';
-    s.onload = () => drawMonthlyCharts(apiData.rows);
-    document.head.appendChild(s);
-  } else {
-    drawMonthlyCharts(apiData.rows);
-  }
-}
-
-// ══════════════════════════════════════════════════════════
-// 월별 현황 탭
-// ══════════════════════════════════════════════════════════
-function renderMonthly(el, apiData, row, fixed, costData) {
   const maxSales = Math.max(...apiData.trend.map(t => t.매출합계 || 0), 1);
   const totalExp = row.지출합계;
 
   el.innerHTML = '';
-  el.appendChild(renderTabBar(el, 'monthly', apiData, row, fixed, costData));
+  el.appendChild(renderTabBar(el, 'main', apiData, row, fixed, costData));
 
   const content = document.createElement('div');
   content.innerHTML = `
@@ -535,9 +336,208 @@ function renderMonthly(el, apiData, row, fixed, costData) {
   el.querySelectorAll('.m-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       const targetRow = apiData.rows.find(r => r.month === Number(tab.dataset.month) && r.year === Number(tab.dataset.year));
-      if (targetRow) renderMonthly(el, apiData, targetRow, fixed, costData);
+      if (targetRow) renderMain(el, apiData, targetRow, fixed, costData);
     });
   });
+}
+
+// ══════════════════════════════════════════════════════════
+// 월별 현황 탭
+// ══════════════════════════════════════════════════════════
+function renderMonthly(el, apiData, row, fixed, costData) {
+  el.innerHTML = '';
+  el.appendChild(renderTabBar(el, 'monthly', apiData, row, fixed, costData));
+
+  const allRows = apiData.rows;
+  const totalSales = allRows.reduce((s,r) => s+r.매출합계, 0);
+  const totalBurden = allRows.reduce((s,r) => s+r.순매출, 0);
+
+  const wrap = document.createElement('div');
+
+  // 인사이트 배너
+  const lastRow = allRows[allRows.length-1];
+  const prevRow = allRows.length > 1 ? allRows[allRows.length-2] : null;
+  const prevDiff = prevRow && prevRow.매출합계 ? Math.round((lastRow.매출합계-prevRow.매출합계)/prevRow.매출합계*100) : 0;
+
+  wrap.innerHTML = `
+    <style>
+      .insight-banner{background:var(--yellow-pale);border:1px solid var(--yellow-border);border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;}
+      .insight-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0;margin-top:4px;}
+      .insight-main{font-size:12.5px;font-weight:500;color:var(--brown);}
+      .insight-sub{font-size:11px;color:var(--brown-mid);margin-top:3px;}
+      .annual-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px;}
+      .an-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+      .an-label{font-size:10px;color:var(--text-3);margin-bottom:4px;}
+      .an-value{font-size:16px;font-weight:700;color:var(--text-1);line-height:1;}
+      .an-value.loss{color:#DC2626;}
+      .an-sub{font-size:10px;color:var(--text-3);margin-top:3px;}
+      .monthly-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+      .c-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+      .c-head{padding:11px 16px 9px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
+      .c-title{font-size:12.5px;font-weight:700;color:var(--text-1);}
+      .c-meta{font-size:11px;color:var(--text-3);}
+      .stat3{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border-light);}
+      .stat-item{padding:10px 12px;text-align:center;border-right:1px solid var(--border-light);}
+      .stat-item:last-child{border-right:none;}
+      .stat-label{font-size:10px;color:var(--text-3);margin-bottom:3px;}
+      .stat-value{font-size:13px;font-weight:700;color:var(--text-1);}
+      .stat-value.up{color:#059669;}
+      .stat-value.dn{color:#DC2626;}
+      .monthly-table{width:100%;border-collapse:collapse;}
+      .monthly-table th{padding:8px 14px;font-size:10.5px;color:var(--text-3);background:var(--bg-page);border-bottom:1px solid var(--border-light);text-align:left;font-weight:400;}
+      .monthly-table th:not(:first-child){text-align:right;}
+      .monthly-table td{padding:9px 14px;font-size:12px;color:var(--text-2);border-bottom:1px solid var(--border-light);}
+      .monthly-table td:not(:first-child){text-align:right;}
+      .monthly-table tr:last-child td{border-bottom:none;}
+      .monthly-table tr:hover td{background:var(--bg-hover);}
+      .td-loss{color:#DC2626;font-weight:700;}
+    </style>
+
+    <!-- 인사이트 배너 -->
+    <div class="insight-banner">
+      <div class="insight-dot"></div>
+      <div>
+        <div class="insight-main">
+          ${lastRow.month}월 매출이 전월 대비 ${prevDiff >= 0 ? '+' : ''}${prevDiff}% ${prevDiff >= 0 ? '증가' : '감소'}했습니다.
+          올해 누적 회사 부담금은 ${Utils.formatKRW(Math.abs(totalBurden))}입니다.
+        </div>
+        <div class="insight-sub">사내카페는 복지 목적으로 운영되며, 회사 부담금은 복지 운영 비용으로 처리됩니다.</div>
+      </div>
+    </div>
+
+    <!-- 연간 누적 -->
+    <div class="annual-grid">
+      <div class="an-card">
+        <div class="an-label">누적 매출 (${allRows[0].month}~${lastRow.month}월)</div>
+        <div class="an-value">${Utils.formatKRW(totalSales)}</div>
+        <div class="an-sub">월평균 ${Utils.formatKRW(Math.round(totalSales/allRows.length))}</div>
+      </div>
+      <div class="an-card">
+        <div class="an-label">누적 지출</div>
+        <div class="an-value">${Utils.formatKRW(allRows.reduce((s,r)=>s+r.지출합계,0))}</div>
+        <div class="an-sub">월평균 ${Utils.formatKRW(Math.round(allRows.reduce((s,r)=>s+r.지출합계,0)/allRows.length))}</div>
+      </div>
+      <div class="an-card">
+        <div class="an-label">누적 회사 부담금</div>
+        <div class="an-value loss">${Utils.formatKRW(totalBurden)}</div>
+        <div class="an-sub">복지 운영 누적 비용</div>
+      </div>
+      <div class="an-card">
+        <div class="an-label">누적 직책지원비</div>
+        <div class="an-value">${Utils.formatKRW(allRows.reduce((s,r)=>s+r.직책지원비,0))}</div>
+        <div class="an-sub">${allRows.length}개월 합산</div>
+      </div>
+    </div>
+
+    <!-- 월별 그래프 + 통계 -->
+    <div class="monthly-grid">
+      <div class="c-card">
+        <div class="c-head">
+          <span class="c-title">월별 손익 추이</span>
+          <span class="c-meta">매출 vs 지출합계</span>
+        </div>
+        <div style="padding:14px 16px 8px;">
+          <canvas id="monthlyChart" height="140"></canvas>
+          <div style="display:flex;gap:14px;margin-top:8px;">
+            <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text-2);">
+              <div style="width:14px;height:2px;background:#F5C800;border-radius:1px;"></div>매출
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text-2);">
+              <div style="width:14px;height:2px;background:#FCA5A5;border-radius:1px;"></div>지출합계
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text-2);">
+              <div style="width:14px;height:2px;background:#93C5FD;border-radius:1px;"></div>회사부담금
+            </div>
+          </div>
+        </div>
+        <div class="stat3">
+          <div class="stat-item">
+            <div class="stat-label">영업일수 (3월)</div>
+            <div class="stat-value">${lastRow.영업일수 || 19}일</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">일평균 매출</div>
+            <div class="stat-value">${Utils.formatMan(Math.round(lastRow.매출합계/(lastRow.영업일수||19)))}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">전월 대비</div>
+            <div class="stat-value ${prevDiff >= 0 ? 'up' : 'dn'}">${prevDiff >= 0 ? '+' : ''}${prevDiff}%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 직책지원비 추이 -->
+      <div class="c-card">
+        <div class="c-head">
+          <span class="c-title">직책지원비 추이</span>
+          <span class="c-meta">월별 변화</span>
+        </div>
+        <div style="padding:14px 16px 8px;">
+          <canvas id="jikchaekChart" height="140"></canvas>
+        </div>
+        <div class="stat3">
+          ${allRows.slice(-3).map(r => `
+            <div class="stat-item">
+              <div class="stat-label">${r.month}월</div>
+              <div class="stat-value">${Utils.formatMan(r.직책지원비)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- 월별 상세 테이블 -->
+    <div class="c-card">
+      <div class="c-head">
+        <span class="c-title">월별 상세 내역</span>
+        <span class="c-meta">전체 ${allRows.length}개월</span>
+      </div>
+      <table class="monthly-table">
+        <thead>
+          <tr>
+            <th>연월</th>
+            <th>매출합계</th>
+            <th>재료비</th>
+            <th>직책지원비</th>
+            <th>변동지출</th>
+            <th>고정지출</th>
+            <th>특이지출</th>
+            <th>지출합계</th>
+            <th>회사부담금</th>
+            <th>메모</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${[...allRows].reverse().map(r => `
+            <tr>
+              <td style="font-weight:500;color:var(--text-1);">${r.year}년 ${r.month}월</td>
+              <td style="font-weight:700;color:var(--brown);">${Utils.formatKRW(r.매출합계)}</td>
+              <td>${Utils.formatKRW(r.재료비)}</td>
+              <td>${Utils.formatKRW(r.직책지원비)}</td>
+              <td>${Utils.formatKRW(r.변동지출)}</td>
+              <td>${Utils.formatKRW(r.고정지출)}</td>
+              <td>${Utils.formatKRW(r.특이지출)}</td>
+              <td style="font-weight:500;">${Utils.formatKRW(r.지출합계)}</td>
+              <td class="td-loss">${Utils.formatKRW(r.순매출)}</td>
+              <td style="color:var(--text-3);font-size:11px;">${r.메모 || '—'}</td>
+              <td><button class="btn btn-sm" onclick="openEditModal(${r.rowIndex},'${encodeURIComponent(JSON.stringify(r))}')">수정</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  el.appendChild(wrap);
+
+  // Chart.js 로드 후 그래프 그리기
+  if (typeof Chart === 'undefined') {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';
+    s.onload = () => drawMonthlyCharts(apiData.rows);
+    document.head.appendChild(s);
+  } else {
+    drawMonthlyCharts(apiData.rows);
+  }
 }
 
 function drawMonthlyCharts(rows) {

@@ -55,7 +55,7 @@ Pages.cafe = async function(container) {
   container.querySelector('#btn-add').addEventListener('click', () => openAddModal(year, month));
   container.querySelector('#btn-export').addEventListener('click', () => Utils.toast('준비 중인 기능입니다.'));
 
-  renderMain(document.getElementById('cafe-content'), apiData, currentRow, fixed, costData);
+  renderMonthly(document.getElementById('cafe-content'), apiData, currentRow, fixed, costData);
 };
 
 // ══════════════════════════════════════════════════════════
@@ -79,8 +79,8 @@ function renderTabBar(el, activeTab, apiData, currentRow, fixed, costData) {
       tab.style.borderBottomColor = 'var(--yellow)';
     }
     tab.addEventListener('click', () => {
-      if (t.key === 'main')    renderMain(el, apiData, currentRow, fixed, costData);
-      if (t.key === 'monthly') renderMonthly(el, apiData, currentRow, fixed, costData);
+      if (t.key === 'main')    renderMonthly(el, apiData, currentRow, fixed, costData);
+      if (t.key === 'monthly') renderMain(el, apiData, currentRow, fixed, costData);
       if (t.key === 'cost')    renderCost(el, apiData, costData);
     });
     bar.appendChild(tab);
@@ -96,7 +96,7 @@ function renderMain(el, apiData, row, fixed, costData) {
   const totalExp = row.지출합계;
 
   el.innerHTML = '';
-  el.appendChild(renderTabBar(el, 'main', apiData, row, fixed, costData));
+  el.appendChild(renderTabBar(el, 'monthly', apiData, row, fixed, costData));
 
   const content = document.createElement('div');
   content.innerHTML = `
@@ -214,7 +214,7 @@ function renderMain(el, apiData, row, fixed, costData) {
     </div>
 
     <!-- 메인 그리드 -->
-    <div class="main-grid" data-grid-id="main-grid" data-page="cafe-monthly">
+    <div class="main-grid" data-grid-id="main-grid" data-page="cafe-main">
 
       <!-- 아코디언 -->
       <div class="c-card">
@@ -346,7 +346,7 @@ function renderMain(el, apiData, row, fixed, costData) {
 // ══════════════════════════════════════════════════════════
 function renderMonthly(el, apiData, row, fixed, costData) {
   el.innerHTML = '';
-  el.appendChild(renderTabBar(el, 'monthly', apiData, row, fixed, costData));
+  el.appendChild(renderTabBar(el, 'main', apiData, row, fixed, costData));
 
   const allRows = apiData.rows;
   const totalSales = allRows.reduce((s,r) => s+r.매출합계, 0);
@@ -430,7 +430,7 @@ function renderMonthly(el, apiData, row, fixed, costData) {
     </div>
 
     <!-- 월별 그래프 + 통계 -->
-    <div class="monthly-grid" data-grid-id="monthly-grid" data-page="cafe-main">
+    <div class="monthly-grid" data-grid-id="monthly-grid" data-page="cafe-monthly">
       <div class="c-card">
         <div class="c-head">
           <span class="c-title">월별 손익 추이</span>

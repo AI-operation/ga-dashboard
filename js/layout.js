@@ -148,7 +148,9 @@ const Layout = (() => {
   // ──────────────────────────────────────────────────────
   function _attachHandlesInScope(scope, page) {
     scope.querySelectorAll('[data-grid-id]').forEach(grid => {
-      _attachHandleToGrid(grid, page);
+      // 그리드 자체의 data-page를 우선 사용 (탭별로 다른 페이지 키)
+      const gridPage = grid.dataset.page || page;
+      _attachHandleToGrid(grid, gridPage);
     });
   }
 

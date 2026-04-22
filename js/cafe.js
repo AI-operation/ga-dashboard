@@ -214,7 +214,7 @@ function renderMain(el, apiData, row, fixed, costData) {
     </div>
 
     <!-- 메인 그리드 -->
-    <div class="main-grid">
+    <div class="main-grid" data-grid-id="main-grid" data-page="cafe-monthly">
 
       <!-- 아코디언 -->
       <div class="c-card">
@@ -430,7 +430,7 @@ function renderMonthly(el, apiData, row, fixed, costData) {
     </div>
 
     <!-- 월별 그래프 + 통계 -->
-    <div class="monthly-grid">
+    <div class="monthly-grid" data-grid-id="monthly-grid" data-page="cafe-main">
       <div class="c-card">
         <div class="c-head">
           <span class="c-title">월별 손익 추이</span>
@@ -659,7 +659,7 @@ function renderCost(el, apiData, costData) {
     </div>
 
     <!-- 메뉴별 원가 -->
-    <div class="cost-grid">
+    <div class="cost-grid" data-grid-id="cost-grid" data-page="cafe-cost">
       <div class="c-card">
         <div class="c-head">
           <span class="c-title">메뉴별 원가 분석</span>
@@ -740,6 +740,9 @@ function renderCost(el, apiData, costData) {
       });
     }
   }, 100);
+
+  // 저장된 레이아웃 적용
+  if (typeof Layout !== 'undefined') Layout.applyToDom('cafe-cost', el);
 }
 
 // ══════════════════════════════════════════════════════════

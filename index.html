@@ -145,6 +145,52 @@
       opacity: 1;
       width: 3px;
     }
+
+    /* 세로 리사이즈 핸들 (차트 높이 조절) */
+    .resize-handle-v {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -4px;
+      height: 8px;
+      cursor: row-resize;
+      z-index: 10;
+    }
+    .resize-handle-v::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 2px;
+      background: var(--yellow);
+      opacity: 0.4;
+      transition: opacity 0.15s, height 0.15s;
+    }
+    .resize-handle-v::after {
+      content: '⋯';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--yellow);
+      color: var(--brown);
+      font-size: 16px;
+      font-weight: 700;
+      width: 28px;
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      letter-spacing: 2px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .resize-handle-v:hover::before {
+      opacity: 1;
+      height: 3px;
+    }
   </style>
 </head>
 <body>
